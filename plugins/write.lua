@@ -180,15 +180,13 @@ local function run(msg, matches)
 
 		table.insert(result, text)
 	end
-	local result_text = "Your Text : "..matches[2].."\nDesign With 100 Fonts :"..tostring(#fonts).."\n\n"
+	local result_text = "کلمه ی اولیه: "..matches[2].."\nطراحی با "..tostring(#fonts).." فونت:\n ________________________\n\n "
 	a=0
 	for v=1,#result do
 		a=a+1
 		result_text = result_text..a.."- "..result[a].."\n\n"
 	end
-	local text = result_text.."Part team"
-	  reply_msg(msg.id, text, ok_cb, false)
-
+	return result_text.." ________________________ "
 end
 
 return {
@@ -196,8 +194,8 @@ return {
 	usagehtm = '<tr><td align="center">write متن</td><td align="right">با استفاده از این پلاگین میتوانید متون خود را با فونت های متنوع و زیبایی طراحی کنید. حد اکثر کاراکتر های مجاز 20 عدد میباشد و فقط میتوانید از حروف انگلیسی و اعداد استفاده کنید</td></tr>',
 	usage = {"write [text] : زیبا نویسی",},
 	patterns = {
-		"^([#/!]write) (.*)",
-		"^([#/!]write)$",
+		"^([Ww]rite) (.*)",
+		"^([Ww]rite)$",
 		},
 	run = run
 }

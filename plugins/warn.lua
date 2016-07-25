@@ -1,3 +1,4 @@
+
 local function warn_by_username(extra, success, result) -- /warn <@username>
   if success == 1 then  
   local msg = result
@@ -182,10 +183,10 @@ end
 
 return {
   patterns = {
-    "^[!/#]([Ww][Aa][Rr][Nn])$",
-    "^[!/#]([Ww][Aa][Rr][Nn]) (.*)$",
-    "^[!/#]([Uu][Nn][Ww][Aa][Rr][Nn])$",
-    "^[!/#]([Uu][Nn][Ww][Aa][Rr][Nn]) (.*)$"
+    "^[!/]([Ww][Aa][Rr][Nn])$",
+    "^[!/]([Ww][Aa][Rr][Nn]) (.*)$",
+    "^[!/]([Uu][Nn][Ww][Aa][Rr][Nn])$",
+    "^[!/]([Uu][Nn][Ww][Aa][Rr][Nn]) (.*)$"
   }, 
   run = run 
 }

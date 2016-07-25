@@ -1,8 +1,7 @@
-
 local function addword(msg, name)
     local hash = 'chat:'..msg.to.id..':badword'
     redis:hset(hash, name, 'newword')
-    return "Done"
+    return "کلمه جدید به فیلتر کلمات اضافه شد\n>"..name
 end
 
 local function get_variables_hash(msg)
@@ -16,12 +15,11 @@ local function list_variablesbad(msg)
 
   if hash then
     local names = redis:hkeys(hash)
-    local text = 'list :\n\n'
+    local text = 'لیست کلمات غیرمجاز :\n\n'
     for i=1, #names do
       text = text..'> '..names[i]..'\n'
     end
-    local text = text
-	  reply_msg(msg.id, text, ok_cb, false)
+    return text
 	else
 	return 
   end
@@ -31,8 +29,7 @@ function clear_commandbad(msg, var_name)
   --Save on redis  
   local hash = get_variables_hash(msg)
   redis:del(hash, var_name)
-  local text = 'Done'
-    reply_msg(msg.id, text, ok_cb, false)
+  return 'پاک شدند'
 end
 
 local function list_variables2(msg, value)
@@ -51,7 +48,7 @@ local function list_variables2(msg, value)
 	end
 return 
 end
-      
+      --text = text..names[i]..'\n'
     end
   end
 end
@@ -74,26 +71,23 @@ function clear_commandsbad(msg, cmd_name)
 end
 
 local function run(msg, matches)
-  if matches[1] == 'filter' and matches[2] == '+' then
+  if matches[2] == 'filter' then
   if not is_momod(msg) then
-   local text = 'only for moderators'
-     reply_msg(msg.id, text, ok_cb, false)
+   return 'only for moderators'
   end
   local name = string.sub(matches[3], 1, 50)
 
   local text = addword(msg, name)
   return text
   end
-  if matches[1] == 'filterlist' then
+  if matches[2] == 'filterlist' then
   return list_variablesbad(msg)
-  elseif matches[1] == 'clean' then
+  elseif matches[2] == 'clean' then
 if not is_momod(msg) then return '_|_' end
   local asd = '1'
     return clear_commandbad(msg, asd)
-  elseif matches[1] == 'filter' and matches[2] == '-' then
-   if not is_momod(msg) then
-   return  
-   end
+  elseif matches[2] == 'unfilter' or matches[2] == 'rw' then
+   if not is_momod(msg) then return '_|_' end
     return clear_commandsbad(msg, matches[3])
   else
     local name = user_print_name(msg.from)
@@ -104,12 +98,14 @@ end
 
 return {
   patterns = {
-  "^[!/#](filter) (+) (.*)$",
-   "^[!#/](filter) (-) (.*)$",
-    "^[#!/](filterlist)$",
-    "^[#!/](clean)filterlist$",
+  "^([!/#])(rw) (.*)$",
+  "^([!/#])(filter) (.*)$",
+   "^([!/#])(unfilter) (.*)$",
+    "^([!/#])(filterlist)$",
+    "^([!/#])(clean) filterlist$",
 "^(.+)$",
 	   
   },
   run = run
 }
+
